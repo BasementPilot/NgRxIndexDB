@@ -1,43 +1,36 @@
-import {Action, createReducer, on} from '@ngrx/store';
-import {addArtist, artistsLoaded} from "./artist.actions";
 import {ArtistState} from "./artist.state";
-import {Injectable} from "@angular/core";
 import {DatabaseService} from "../../db/database.service";
-import {from} from "rxjs";
-import {AppInitAction} from "../../+state/appinit.action";
+import {createReducer, on} from "@ngrx/store";
+import {Actions} from "@ngrx/effects";
+import {addArtist} from "./artist.actions";
+import {Artist} from "../../models/artist.interface";
 
-@Injectable({
-  providedIn: "root",
-})
-export class ArtistReducer {
 
-  private initialState!: ArtistState
+let injectedState:boolean = false;
+export let initialState!: ArtistState;
 
-  constructor(private dbService: DatabaseService) {
-    this.initialState = new ArtistState()
+export async function fillInitialState() {
+  const dbService = new DatabaseService()
+  const artists = await dbService.table('artists').toArray()
+  return initialState = {
+    artists: artists
   }
-
-
-  createReducer() {
-    return(state: ArtistState, action: Action) => {
-      if(action instanceof AppInitAction && state === undefined) {
-        return this.initialState
-      } else {
-        //on(artistsLoaded, (state, {artists}) => ({state, artists: artists}),
-        return
-      }
-    }
-  }
-
-  bootstrap() : Promise<ArtistState> {
-    return new Promise(resolve => {
-      from(this.dbService.table('artists').toArray()).subscribe( artists=> {
-          this.initialState.artists = artists
-          resolve(this.initialState)
-        }
-      );
-    })
-  }
-
-
 }
+
+export const artistInitReducer = (state = initialState,action:Actions)=> {
+    if(!state && !injectedState){
+      injectedState = true;
+      return initialState
+    }
+    return artistReducer(state,action as any)
+};
+
+export const artistReducer = createReducer(
+  initialState,
+  on(addArtist, (state, { artist}): ArtistState => {
+    return {
+      ...state,
+      artists: [...state.artists, artist]
+    }
+  }),
+);

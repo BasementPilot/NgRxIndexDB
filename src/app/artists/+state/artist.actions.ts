@@ -1,6 +1,6 @@
 import { createAction } from "@ngrx/store";
 
-export const addArtist = createAction('[Artists Component] Add Artist');
+export const addArtist = createAction('[Artists Component] Add Artist', (artist) => ({artist}));
 export const deleteArtist = createAction('[Artists Component] Delete Artist');
 export const updateArtist = createAction('[Artists Component] Update Artist');
 

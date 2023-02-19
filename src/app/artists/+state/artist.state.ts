@@ -1,11 +1,7 @@
 import {Artist} from "../../models/artist.interface";
-import {AppState} from "../../+state/app.state";
 
-export class ArtistState extends AppState {
-  artists: Artist[];
+export const ARTIST_FEATURE = 'artistFeature';
+export interface ArtistState {
+  artists: Array<Artist>;
 
-  constructor() {
-    super();
-    this.artists = [];
-  }
 }

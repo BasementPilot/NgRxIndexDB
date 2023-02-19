@@ -1,9 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Artist} from "../models/artist.interface";
 import {Observable} from "rxjs";
-import {Store} from "@ngrx/store";
+import {select, Store} from "@ngrx/store";
 import {ArtistState} from "./+state/artist.state";
-import {loadArtists} from "./+state/artist.actions";
+import {addArtist, loadArtists} from "./+state/artist.actions";
+import {DataSource} from "@angular/cdk/collections";
+import {MatTableDataSource} from "@angular/material/table";
+import {selectAllArtists} from "./+state/artist.selector";
+import {AppState} from "../+state/app.state";
 
 const ARTIST_DATA: Artist[] = [
   {id: 1, name: 'artist 1'},
@@ -26,25 +30,22 @@ const ARTIST_DATA: Artist[] = [
   templateUrl: './artists.component.html',
   styleUrls: ['./artists.component.css']
 })
-export class ArtistsComponent implements OnInit{
+export class ArtistsComponent{
 
   displayedColumns: string[] = ['id', 'name'];
-  dataSource = ARTIST_DATA;
+  dataSource: any;
 
-  $artists: Observable<Artist[]>;
+  data: any;
 
-  constructor(private store: Store<ArtistState>) {
-    this.$artists = store.select('artists');
-    this.$artists.subscribe(artists => console.log(artists));
 
-  }
-
-  ngOnInit() {
-    //this.store.dispatch(loadArtists());
+  constructor(private store: Store<AppState>) {
+    this.data = this.store.pipe(select(selectAllArtists)).subscribe(data => {
+      this.dataSource = new MatTableDataSource(data);
+    });
   }
 
   addArtist() {
-
+    this.store.dispatch(addArtist({id: 11, name: 'artist 11', belongsToLabel: 1}));
   }
 
 
