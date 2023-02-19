@@ -12,12 +12,11 @@ import { ArtistsComponent } from './artists/artists.component';
 import { TogetherComponent } from './together/together.component';
 import {MatTableModule} from "@angular/material/table";
 import {ArtistEffects} from "./artists/+state/artist.effects";
-import {artistInitReducer, artistReducer, fillInitialState} from "./artists/+state/artist.reducer";
+import {artistInitReducer, fillInitialState} from "./artists/+state/artist.reducer";
 import {DatabaseService} from "./db/database.service";
 import {AppState} from "./+state/app.state";
 import {AppInitAction} from "./+state/appinit.action";
-import {ARTIST_FEATURE, ArtistState} from "./artists/+state/artist.state";
-import {selectFeature} from "./artists/+state/artist.selector";
+import {ARTIST_FEATURE} from "./artists/+state/artist.state";
 
 @NgModule({
   declarations: [
@@ -35,7 +34,6 @@ import {selectFeature} from "./artists/+state/artist.selector";
     MatTableModule,
     StoreModule.forRoot({}),
     StoreModule.forFeature(ARTIST_FEATURE, artistInitReducer),
-    //StoreModule.forFeature('artists', artistReducer),
     EffectsModule.forRoot([ArtistEffects]),
   ],
   providers: [

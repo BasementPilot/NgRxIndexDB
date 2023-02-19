@@ -45,7 +45,7 @@ export class ArtistsComponent{
   }
 
   addArtist() {
-    this.store.dispatch(addArtist({id: 11, name: 'artist 11', belongsToLabel: 1}));
+    this.store.dispatch(addArtist({artist: {id:100,name:'Hi'}}));
   }
 
 
